@@ -33,4 +33,13 @@ pub trait Ledger: Send + Sync {
         status: PaymentStatus,
         provider_ref: Option<String>,
     ) -> Result<Option<Transaction>, String>;
+
+    /// List transactions, newest first, optionally filtered. `limit` caps the
+    /// number returned. Powers the dashboard's transactions table + metrics.
+    async fn list(
+        &self,
+        status: Option<PaymentStatus>,
+        provider: Option<String>,
+        limit: usize,
+    ) -> Result<Vec<Transaction>, String>;
 }

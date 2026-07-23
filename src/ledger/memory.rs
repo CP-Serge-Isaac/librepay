@@ -71,4 +71,23 @@ impl Ledger for InMemoryLedger {
             None => Ok(None),
         }
     }
+
+    async fn list(
+        &self,
+        status: Option<PaymentStatus>,
+        provider: Option<String>,
+        limit: usize,
+    ) -> Result<Vec<Transaction>, String> {
+        let map = self.inner.lock().map_err(|e| e.to_string())?;
+        let mut txns: Vec<Transaction> = map
+            .values()
+            .filter(|t| status.map_or(true, |s| t.status == s))
+            .filter(|t| provider.as_deref().map_or(true, |p| t.provider == p))
+            .cloned()
+            .collect();
+        // Newest first.
+        txns.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+        txns.truncate(limit);
+        Ok(txns)
+    }
 }

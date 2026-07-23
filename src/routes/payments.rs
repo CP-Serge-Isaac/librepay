@@ -1,17 +1,46 @@
 //! Payment endpoints: create a charge, then poll its status.
 
 use axum::{
-    extract::{Path, State},
+    extract::{Path, Query, State},
     http::HeaderMap,
     Json,
 };
 use chrono::Utc;
+use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::error::ApiError;
 use crate::models::{PaymentRequest, PaymentStatus, Transaction};
 use crate::providers::InitiateRequest;
 use crate::state::AppState;
+
+/// Query params for `GET /v1/payments` (all optional).
+#[derive(Debug, Deserialize)]
+pub struct ListQuery {
+    pub status: Option<PaymentStatus>,
+    pub provider: Option<String>,
+    #[serde(default = "default_limit")]
+    pub limit: usize,
+}
+
+fn default_limit() -> usize {
+    100
+}
+
+/// `GET /v1/payments` — list transactions (newest first), optional filters
+/// `?status=success&provider=mock&limit=50`. Powers the dashboard table.
+pub async fn list_payments(
+    State(state): State<AppState>,
+    Query(q): Query<ListQuery>,
+) -> Result<Json<Vec<Transaction>>, ApiError> {
+    let limit = q.limit.clamp(1, 1000);
+    let txns = state
+        .ledger
+        .list(q.status, q.provider, limit)
+        .await
+        .map_err(ApiError::Internal)?;
+    Ok(Json(txns))
+}
 
 /// `POST /v1/payments` — start a collection (charge the customer).
 ///

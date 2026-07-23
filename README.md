@@ -36,8 +36,26 @@ cargo run                     # starts on 0.0.0.0:8080 with the mock operator
 |---|---|---|
 | GET  | `/health` | liveness |
 | POST | `/v1/payments` | start a collection (charge a customer) |
+| GET  | `/v1/payments` | list transactions (`?status=&provider=&limit=`) |
 | GET  | `/v1/payments/{id}` | poll status (falls back to operator) |
+| GET  | `/v1/stats` | dashboard KPIs (counts, success rate, volume, per-operator) |
 | POST | `/v1/webhook/{provider}` | operator callback (HMAC-verified) |
+
+CORS is open in dev so the dashboard (different port) can call the API. Tighten
+to the dashboard origin in production.
+
+## Dashboard
+
+A **Flutter Web** dashboard lives in `dashboard/` — KPIs, per-operator breakdown,
+and a live transactions table with status filtering. It consumes this API over
+REST; set the API base URL from the top bar (default `http://localhost:8080`).
+
+```bash
+cd dashboard
+flutter pub get
+flutter run -d chrome      # dev
+flutter build web --release  # production build -> build/web
+```
 
 ### Create a payment
 
