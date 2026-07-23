@@ -1,4 +1,4 @@
-//! Open-source mobile money aggregator API.
+//! LibrePay — open-source mobile money aggregator API.
 //!
 //! One HTTP/JSON API in front of many operators. Any client — web (React, Vue,
 //! Laravel...) or mobile (Flutter, Kotlin, Swift, React Native) — talks to it
@@ -54,7 +54,7 @@ async fn main() {
     tracing::info!(
         addr = %config.bind_addr,
         provider = %config.default_provider,
-        "momo-aggregator listening"
+        "librepay listening"
     );
 
     axum::serve(listener, app)

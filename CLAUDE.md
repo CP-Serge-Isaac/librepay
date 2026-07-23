@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Open-source mobile money aggregator API in Rust: one HTTP/JSON API in front of many
+**LibrePay** — open-source mobile money aggregator API in Rust: one HTTP/JSON API in front of many
 operators (Orange Money, MTN MoMo, Moov, Wave). Built to run **today** on a mock
 operator with zero setup, and go live on real operators the day a contract is signed —
 by adding an adapter + env vars, with no rewrite.

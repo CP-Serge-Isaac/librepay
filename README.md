@@ -1,4 +1,4 @@
-# momo-aggregator
+# LibrePay
 
 Open-source **mobile money aggregator API** in Rust. One HTTP/JSON API in front
 of many operators (Orange Money, MTN MoMo, Moov, Wave…). Any client speaks to it

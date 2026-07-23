@@ -1,5 +1,5 @@
 [package]
-name = "momo-aggregator"
+name = "librepay"
 version = "0.1.0"
 edition = "2021"
 description = "Open-source mobile money aggregator API (Rust). Mock provider today, real operators (MTN/Orange/Wave) the day you sign a contract — same code, just config."
