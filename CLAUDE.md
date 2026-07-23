@@ -9,7 +9,12 @@ operators (Orange Money, MTN MoMo, Moov, Wave). Built to run **today** on a mock
 operator with zero setup, and go live on real operators the day a contract is signed —
 by adding an adapter + env vars, with no rewrite.
 
+This is a two-part repo: the **Rust API** (root) and a **Flutter Web dashboard**
+(`dashboard/`) that consumes it over REST.
+
 ## Commands
+
+### API (Rust, root)
 
 ```bash
 cargo run            # start API on 0.0.0.0:8080 (mock provider), configurable via env
@@ -22,6 +27,26 @@ cargo test tampered_body_fails   # run a single test by name
 
 Runtime config is env-only (see `.env.example`): `BIND_ADDR`, `DEFAULT_PROVIDER`,
 `WEBHOOK_SECRET`. Log level via `RUST_LOG` (e.g. `RUST_LOG=debug cargo run`).
+
+### Dashboard (Flutter Web, `dashboard/`)
+
+```bash
+cd dashboard
+flutter pub get
+flutter run -d chrome          # dev against a running API
+flutter analyze                # lint
+flutter build web --release    # -> dashboard/build/web
+```
+
+Flutter SDK on this machine: `/home/serge/dev/flutter/bin`. The dashboard's API
+base URL is set from the top bar (default `http://localhost:8080`); no env file.
+
+## Endpoints
+
+`GET /health` · `POST /v1/payments` · `GET /v1/payments` (list, `?status=&provider=&limit=`)
+· `GET /v1/payments/{id}` · `GET /v1/stats` (dashboard KPIs) · `POST /v1/webhook/{provider}`.
+CORS is open in dev (see `src/routes/mod.rs`) so the browser dashboard can call the
+API — tighten to the dashboard origin in prod.
 
 ## Architecture — the two abstractions that matter
 
