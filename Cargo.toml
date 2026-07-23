@@ -1,0 +1,25 @@
+[package]
+name = "momo-aggregator"
+version = "0.1.0"
+edition = "2021"
+description = "Open-source mobile money aggregator API (Rust). Mock provider today, real operators (MTN/Orange/Wave) the day you sign a contract — same code, just config."
+license = "MIT"
+
+[dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+async-trait = "0.1"
+hmac = "0.12"
+sha2 = "0.10"
+hex = "0.4"
+
+[profile.release]
+lto = true
+codegen-units = 1
